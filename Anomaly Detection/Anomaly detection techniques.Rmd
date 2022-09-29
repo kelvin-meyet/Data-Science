@@ -1,0 +1,180 @@
+---
+title: "MACHINE LEARNING ANOMALY DETECTION METHODS"
+author: "KELVIN OFORI-MINTA"
+#date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  pdf_document:
+    fig_caption: yes
+    keep_tex: yes
+    latex_engine: pdflatex
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+  word_document:
+    toc: yes
+    toc_depth: '4'
+header-includes:
+- \usepackage{amsmath}
+- \usepackage{amssymb}
+- \usepackage{amsfonts}
+- \usepackage{amsthm}
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhf{}
+- \rhead{Kelvin}
+- \lhead{Anomaly Detection Techniques}
+- \cfoot{\thepage}
+- \usepackage{algorithm}
+- \usepackage[noend]{algpseudocode}
+geometry: margin=1in
+spacing: single
+fontsize: 12pt
+---
+
+\newpage
+\section{Introduction}
+This project seeks to compare four(4) different methods of machine learning models for outlier detection with the use of HTP data sets in R.\newline
+Essentially we seek to find outliers in this data. This dataset contains 902 high-tech parts(HTP) designed for consumer products characterized by 88 tests. These tests are performed to ensure a high quality of the production.\newline
+All these 902 parts were considered functional and have been sold. However the two parts **581** and **619** showed defects in practical use and were returned to the manufacturer by the customer.Therefore these two can be considered as outliers. \newline
+We want to deploy different machine learning models with this data to confirm the authenticity of the customer's complaint to manager. MCD, ISOFOREST, LOF & One Class SVM 
+
+\newpage
+\section{Anomaly Detection Machine learning Models}
+\subsection{Bring in Data}
+```{r}
+#install.packages("ICSOutlier")
+suppressPackageStartupMessages(library("ICSOutlier"))
+#library("ICSOutlier")
+data(HTP)
+dat <- HTP; dim(dat); #labelled data: 88 features & 902 observations
+outliers.true <- c(581, 619) # index of two defective products returned by customer.
+```
+This dataset contains 902 high-tech parts(HTP) designed for consumer products characterized by 88 tests. These tests are performed to ensure a high quality of the production.\newline
+All these 902 parts were considered functional and have been sold. However the two parts **581** and **619** showed defects in practical use and were returned to the manufacturer by the customer.Therefore these two can be considered as outliers.
+
+
+\newpage
+\section{Method 1: Minimum Covariance Determinant(MCD)}
+\subsection{Robust Estimates of Mean Vector, VCOV Matrix with MCD}
+```{r}
+#First obtain robust estimates of the mean vector  and 
+#VCOV matrix of the data with MCD with a breakdown point of your choice
+#install.packages("robustbase")
+library(robustbase)
+# Obtain MCD estimates with a breakdown point of 30%
+fit.robust <- covMcd(dat, cor = FALSE, alpha = 0.70)
+'fit.robust$center' #robust estimates of mean vector
+'fit.robust$COV' #robust estimates of variance-covariance matrix
+```
+\subsection{Compute the Robust Mahalanobis Distance of each Observation}
+```{r}
+#Compute the robust Mahalanobis distance of each observation with respect to the MCD estimates and plot them.
+RD <- mahalanobis(dat, fit.robust$center, fit.robust$cov)
+RD[1:30]
+```
+```{r}
+# Cut-off based on the chi-square distribution
+cutoff.chi.sq <- qchisq(0.975, df = ncol(dat)); cutoff.chi.sq
+#All observations above this cutoff value are potential outliers.
+```
+All observations above this cutoff value are potential outliers.
+\newpage
+\subsection{Plot Results of MCD}
+```{r}
+# PLOT THE RESULTS
+colPoints <- ifelse(RD >= min(c(cutoff.chi.sq)), 1, grey(0.5))
+pchPoints <- ifelse(RD >= min(c(cutoff.chi.sq)), 16, 4)
+plot(seq_along(RD), RD, pch = pchPoints, col = colPoints,
+	ylim=c(0, max(RD, cutoff.chi.sq) + 2), cex.axis = 0.7, cex.lab = 0.7,
+	ylab = expression(RD**2), xlab = "Observation Index", main="Outlier Detection with MCD")
+abline(h = c(cutoff.chi.sq), lty = c("dashed", "dotted"),     ) # col=c("blue", "red")
+legend("topleft", lty = c("dashed", "dotted"), cex = 0.7, ncol = 2, bty = "n",
+	legend = c(expression(paste(chi[p]**2, " cut-off"))),    ) # col=c("blue", "red")
+text(619, RD[619], labels = 619, col=619)
+text(581, RD[581], labels = 581, col=581)
+```
+
+```{r}
+which(RD >= cutoff.chi.sq) #outlier IDS - ALL POTENTIAL OUTLIERS
+```
+```{r}
+#inspect the most outlying observation
+#Top list of potential outliers would actually be above an RD(Mahalanobis value of 22500)
+most.outly<- which(RD > 22500)  
+most.outly
+```
+Top list of potential outliers are shown above,(based on a mahalanobis distance-RD > 22500). This clearly indicates that only item 619 is among the top list of outliers, this also informs that item 581 is not captured in the "top list" of potential outliers, contrary to customer's claim. Thus the MCD model was able to find only 1 defective item.
+
+
+\newpage
+\section{Method 2: Isolation Forest}
+\subsection{Deploy Isoforest with isofor package}
+```{r}
+#ISOLATION FOREST 
+suppressPackageStartupMessages(library("devtools"))
+
+#devtools::install_github("Zelazny7/isofor")
+suppressPackageStartupMessages(library(isofor))
+
+# help(package="isofor")
+
+# An isolation forest model with 200 trees and 256 samples drawn  to construct each tree(phi) 
+fit.isoforest <- iForest(dat, nt=200, phi=256)
+pred <- predict(fit.isoforest, newdata=dat)#pred 
+```
+
+\subsection{Visualizing Isolation Forest Results}
+```{r}
+# PLOT OF THE SCORES
+score <- scale(pred, center = min(pred), scale = max(pred)-min(pred))
+par(mfrow=c(1,1), mar=rep(4,4))
+plot(x=1:length(score), score, type="p", pch=1, 
+	main="Anomaly Score via Isoforest",
+    	xlab="id", ylab="score", cex=score*3, col="darkviolet")
+add.seg <- function(x) segments(x0=x[1], y0=0, x1=x[1], y1=x[2], 
+	lty=1, lwd=1.5, col="forestgreen")
+apply(data.frame(id=1:length(score), score=score), 1, FUN=add.seg)
+eps <- 0.99
+id.outliers <- which(score > quantile(score, eps));id.outliers
+text(id.outliers, score[id.outliers]+0.005, label=id.outliers, 
+	col="red", cex=0.7) 
+```
+
+This isolation forest plot shown above could not specifically identify those two observations(defective items) as anomalies.
+
+\newpage
+\section{Method 3: Local Outlier Factor (LOF)}
+\subsection{Deploy LOF with Rlof package}
+```{r}
+# LOCAL OUTLIER FACTOR
+#install.packages("Rlof")
+#help(package="Rlof")
+library(Rlof)
+#Obtained the LOF of our dataset with k-nearest neighbour, which considers the density of the neighbourhood(k) around the observation to determineits outliers, in this case k=10.
+outlier.scores <- lof(dat, k=10);  outlier.scores [1:20]
+which(outlier.scores > quantile(outlier.scores, 0.95))
+```
+\subsection{Visualize LOF Results}
+```{r}
+# PLOT OF THE LOF SCORES
+score <- scale(outlier.scores, center = min(outlier.scores), 
+	scale = max(outlier.scores)-min(outlier.scores)) # NORMALIZED TO RANGE[0,1]
+par(mfrow=c(1,1), mar=rep(4,4))
+plot(x=1:length(score), score, type="p", pch=1, 
+	main="Local Outlier Factor (LOF)",
+    	xlab="id", ylab="LOF", cex=score*5, col="darkviolet")
+add.seg <- function(x) segments(x0=x[1], y0=0, x1=x[1], y1=x[2], 
+	lty=1, lwd=1.5, col="forestgreen")
+apply(data.frame(id=1:length(score), score=score), 1, FUN=add.seg)
+eps <- 0.99
+id.outliers <- which(outlier.scores > quantile(outlier.scores, eps))
+text(id.outliers, score[id.outliers]+0.005, label=id.outliers, 
+	col="red", cex=0.7)
+```
+This LOF plot above clearly brings out the two defective items(619 & 581) as observed anomalies.
+
+**FINDINGS**:
+From the Anomaly Detection plots above:
+The graph of Local Outlier Factor(LOF) clearly depicts the outliers better than 
+the Isolation forest graph. 
+
