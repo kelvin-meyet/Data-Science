@@ -22,7 +22,7 @@ IMDB_DATADIR = os.path.join(os.path.dirname(dataset), "aclImdb")
 print(os.path.dirname(dataset))
 print(IMDB_DATADIR) #joining two paths
 
-### Creare Training and Test Sets
+### Create Training and Test Sets
 (x_train, y_train), (x_test, y_test), preproc=text.texts_from_folder(datadir=IMDB_DATADIR, 
                                                                      classes=['pos','neg'],
                                                                      maxlen=500, 
@@ -44,3 +44,5 @@ learner = ktrain.get_learner(model=model,
 #learning rate = any fit function used to train a ML or DL model
 learner.fit_onecycle(lr=2e-5, 
                      epochs=2)
+
+#learner.validate(val_data=(x_test, y_test),class_names=train.target_names)
