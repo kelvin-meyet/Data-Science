@@ -6,6 +6,7 @@ In this project, we'll explore the creation of sophisticated AI-powered chatbots
 ## What we will cover ?
 
 In this project, I delve into:
+
 - Understanding Generative AI’s potential 🤖
 - Exploring the Generative AI studio in Google Cloud ☁️
 - Harnessing the Python SDK for Vertex AI PaLM API 🐍
