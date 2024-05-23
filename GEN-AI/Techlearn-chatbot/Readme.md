@@ -30,8 +30,3 @@ The “Pathway Language Model API” provides access to Google’s Pathway Langu
 ## Vertex AI SDK for Python
 
 The Vertex AI SDK for Python streamlines data ingestion, model training, and predictions on Vertex AI. It enables programmatically accessing Vertex AI’s capabilities using Python code.
-
-## Demo Video
-
-Check out our demo video on YouTube showcasing the application:
-[[Demo Video]](https://youtu.be/5JRuy47WR1M)
