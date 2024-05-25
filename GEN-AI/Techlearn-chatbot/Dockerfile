@@ -3,7 +3,7 @@ FROM python:3.8
 EXPOSE 5000
 WORKDIR /app
 
-COPY . ./
+COPY ./ ./
 
 RUN pip install -r requirements.txt
 
