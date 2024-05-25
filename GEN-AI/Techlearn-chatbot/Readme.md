@@ -33,7 +33,7 @@ The Vertex AI SDK for Python streamlines data ingestion, model training, and pre
 
 # --- Steps to Create Arifact Repository, Build & Run in GCP ---
 
-## -----------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------
 
 ## Syntax below
 
@@ -43,7 +43,7 @@ gcloud artifacts repositories create genairepo --project=atomic-byway-423416-p2 
 
 # --- Build & Submit Image to Repository in GCP---
 
-# -----------------------------------------------------------------------------------------
+## -------------------------------------------------------------------------
 
 # Syntax below
 
@@ -51,7 +51,7 @@ gcloud artifacts repositories create genairepo --project=atomic-byway-423416-p2 
 
 gcloud builds submit --tag us-central1-docker.pkg.dev/atomic-byway-423416-p2/genairepo/chatbot1 .
 
-# Go to CloudRun and start a new service with existing container image
+## Go to CloudRun and start a new service with existing container image
 
 1. Deploy one revision from an existing container image
 
