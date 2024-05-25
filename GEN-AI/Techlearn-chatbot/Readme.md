@@ -31,19 +31,23 @@ The “Pathway Language Model API” provides access to Google’s Pathway Langu
 
 The Vertex AI SDK for Python streamlines data ingestion, model training, and predictions on Vertex AI. It enables programmatically accessing Vertex AI’s capabilities using Python code.
 
-# -----Create Arifact Repository in GCP---
+# --- Steps to Create Arifact Repository, Build & Run in GCP ---
 
-# Syntax below
+## -----------------------------------------------------------------------------------------
 
-# gcloud artifacts repositories create <name of repository> --project=<project_id> --repository-format=docker --location=us-central1 --description="describe repository"
+## Syntax below
+
+## gcloud artifacts repositories create <name of repository> --project=<project_id> --repository-format=docker --location=us-central1 --description="describe repository"
 
 gcloud artifacts repositories create genairepo --project=atomic-byway-423416-p2 --repository-format=docker --location=us-central1 --description="Docker Repokelvin"
 
-# -----Build & Submit Image to Repository in GCP---
+# --- Build & Submit Image to Repository in GCP---
+
+# -----------------------------------------------------------------------------------------
 
 # Syntax below
 
-# gcloud builds submit --tag <>/<project id>/<name of repository>/<name of image> .
+# gcloud builds submit --tag location-docker.pkg.dev/project id/name of repository/name of image .
 
 gcloud builds submit --tag us-central1-docker.pkg.dev/atomic-byway-423416-p2/genairepo/chatbot1 .
 
