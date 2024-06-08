@@ -2,7 +2,7 @@
 
 This folder will help reader understand the work done in relation to the creation of this Chatbot using
 
-## Part A - Admin Folder
+## Part A - Admin Folder - Process PDF
 
 - The materials and codes in the Admin folder is a Streamlit application that processes PDF files upon upload, splits its content into chunks, creates a FAISS vector store using Bedrock embeddings, and uploads the vector store to S3 the created S3 bucket.
 
@@ -18,7 +18,7 @@ This can be achieved when:
    docker run -e BUCKET_NAME=bedrock-llm-chatbot-files -v C:/Users/dumbl/.aws:/root/.aws -p 8083:8083 -it pdf-reader-admin002
 ```
 
-## Part B - The User Folder
+## Part B - The User Folder - Query PDF
 
 - The materials and codes in the User folder querries the chatbot based on document supplied in Part A
 

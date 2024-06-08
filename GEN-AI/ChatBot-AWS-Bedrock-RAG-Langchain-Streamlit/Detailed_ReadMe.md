@@ -73,8 +73,8 @@ Set the `BUCKET_NAME` environment variable to your S3 bucket name.
 
 3. Run the Docker container using:
 
-   ```sh
-   docker run -e BUCKET_NAME=your-s3-bucket-name -v ~/.aws:/root/.aws -p 8083:8083 -it pdf-reader-admin002
+   ```
+   docker run -e BUCKET_NAME=bedrock-llm-chatbot-files -v C:/Users/dumbl/.aws:/root/.aws -p 8083:8083 -it pdf-reader-admin002
    ```
 
 ### Step 4: Access the Application
@@ -90,3 +90,66 @@ Open your web browser and go to `http://localhost:8083` to access the applicatio
 ## Conclusion
 
 This application provides an end-to-end solution for processing PDF files, creating embeddings, and storing the resulting vector store in AWS S3.
+
+# Detailed Description of User Section
+
+1. **Docker Configuration**:
+
+   - A Dockerfile is provided to set up the Python 3.11 environment, expose port 8084, copy the requirements.txt file, install or upgrade langchain and boto3, copy the application code into the working directory, and set the entry point command to run the Streamlit application.
+
+2. **Python Script Overview**:
+
+   - The script uses various Python libraries and modules to implement a PDF ChatBot application utilizing Bedrock, RAG, AWS, and Faiss.
+   - It imports necessary libraries including boto3 for AWS interaction, streamlit for building the web app, and various components from langchain_community for NLP tasks.
+   - The script defines functions to set up S3 client, load embeddings, create a unique ID, split text, create a vector store, and get responses to questions.
+   - The `main()` function sets up the Streamlit web app interface, allowing users to upload PDF files, ask questions, and receive answers.
+
+3. **S3 Configuration**:
+
+   - The S3 client is configured to interact with an S3 bucket, specified by the `BUCKET_NAME` environment variable.
+   - The script includes functions to upload and download files to/from the S3 bucket.
+
+4. **BEDROCK Configuration**:
+
+   - The script initializes the Bedrock client and embeddings, which are used for NLP tasks such as generating responses to questions.
+
+5. **Text Splitting and Vector Store Creation**:
+
+   - The script includes functions to split text into documents (chunks) and create a vector store using FAISS from these documents.
+
+6. **Main Workflow**:
+
+   - In the main function, the Streamlit app interface is set up.
+   - Users can upload PDF files, which are then split into text chunks.
+   - Users can input questions, and the application provides responses based on the uploaded PDF content.
+
+7. **Execution Flow**:
+
+   - When the script is executed, the main function is called, launching the Streamlit web app.
+   - Users interact with the web app, uploading files and asking questions, and the application provides responses accordingly.
+
+8. **Output**:
+
+   - The output is a web-based interface where users can upload PDF files, ask questions, and receive answers based on the content of the uploaded files.
+
+9. **Usage**:
+   - The Dockerfile provided can be used to containerize the application for deployment in a Docker environment.
+   - Users can build the Docker image using the Dockerfile and run containers based on that image to host the web app.
+
+```
+   docker build -t pdf-reader-client1 .
+
+   docker run -e BUCKET_NAME=bedrock-llm-chatbot-files -v C:/Users/dumbl/.aws:/root/.aws -p 8084:8084 -it pdf-reader-client1
+```
+
+Usage Instructions:
+
+1.  Set Up AWS Credentials.
+2.  Configure Environment Variables.
+3.  Build and Run Docker Container.
+4.  Access the Application.
+5.  Query the Document.
+
+## About Me:
+
+## Connect with me:
