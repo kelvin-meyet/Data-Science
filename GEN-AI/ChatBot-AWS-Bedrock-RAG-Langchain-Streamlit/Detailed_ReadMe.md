@@ -150,6 +150,8 @@ Usage Instructions:
 4.  Access the Application.
 5.  Query the Document.
 
+![Sample Query](final-image.png)
+
 ## About Me:
 
 ## Connect with me:
