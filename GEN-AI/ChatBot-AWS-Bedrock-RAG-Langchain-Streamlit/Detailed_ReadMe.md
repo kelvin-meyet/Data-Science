@@ -89,7 +89,7 @@ Open your web browser and go to `http://localhost:8083` to access the applicatio
 
 This application provides an end-to-end solution for processing PDF files, creating embeddings, and storing the resulting vector store in AWS S3.
 
-![PDF Processing Workflow](final-image.png)
+![Architecture](ChatBot-architecture)
 
 ## About Me:
 
