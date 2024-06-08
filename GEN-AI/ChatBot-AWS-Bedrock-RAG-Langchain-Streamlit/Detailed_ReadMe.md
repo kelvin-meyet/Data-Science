@@ -1,66 +1,95 @@
-# Multi-Purpose Gen AI ChatBot
+# Detailed Description of Admin Section
 
-This folder will help reader understand the work done in relation to the creation of this Chatbot using
+## PDF Processing and Vector Store Creation Application
 
-## Admin Folder
+This application processes a PDF file, splits its content into text chunks, creates a FAISS vector store using AWS Bedrock embeddings, and uploads the resulting vector store to AWS S3.
 
-- The materials and codes in the Admin folder is a Streamlit application that processes PDF files upon upload, splits its content into chunks, creates a FAISS vector store using Bedrock embeddings, and uploads the vector store to S3 the created S3 bucket.
+## Overview
 
-This can be achieved when:
+The application:
 
-- A bucket is created on s3 & run the following codes in your terminal
+1. Uploads a PDF file via a Streamlit web interface.
+2. Splits the PDF content into text chunks.
+3. Generates embeddings for the text chunks using AWS Bedrock embeddings.
+4. Creates a FAISS vector store from the embeddings.
+5. Uploads the FAISS vector store files to an AWS S3 bucket.
 
-```
+## Prerequisites
+
+Ensure you have the following set up:
+
+- AWS credentials configured (`~/.aws/credentials`).
+- Docker installed on your machine.
+- An S3 bucket to store the vector store files.
+
+## Application Structure
+
+### Python Script
+
+The Python script performs the following tasks:
+
+1. Initializes the S3 client and Bedrock embeddings.
+2. Defines helper functions to generate unique IDs, split text into chunks, and create a vector store.
+3. Provides the main function that:
+   - Displays the Streamlit web interface.
+   - Handles PDF file upload.
+   - Splits the uploaded PDF into text chunks.
+   - Creates a FAISS vector store from the text chunks.
+   - Uploads the vector store files to S3.
+   - Displays the processing status.
+
+### Dockerfile
+
+The Dockerfile:
+
+1. Sets up the Python environment.
+2. Installs required dependencies.
+3. Copies the application code into the Docker image.
+4. Sets the entry point to run the Streamlit application.
+
+## Running the Application
+
+### Step 1: Configure AWS Credentials
+
+Ensure your AWS credentials are configured properly:
+
+- On Windows: Store your credentials in `C:\Users\<YourUsername>\.aws\credentials`.
+- On Linux/Mac: Store them in `~/.aws/credentials`.
+
+### Step 2: Set Environment Variables
+
+Set the `BUCKET_NAME` environment variable to your S3 bucket name.
+
+### Step 3: Build and Run Docker Container
+
+1. Open your terminal and navigate to the project directory.
+2. Build the Docker image using:
+
+   ```sh
    docker build -t pdf-reader-admin002 .
-   docker run -e BUCKET_NAME=bedrock-llm-chatbot-files -v C:/Users/dumbl/.aws:/root/.aws -p 8083:8083 -it pdf-reader-admin002
-```
+   ```
 
-## The User Folder
+3. Run the Docker container using:
 
-- The materials and codes in the Admin folder is a Streamlit application that processes PDF files upon upload, splits its content into chunks, creates a FAISS vector store using Bedrock embeddings, and uploads the vector store to S3 the created S3 bucket.
+   ```sh
+   docker run -e BUCKET_NAME=your-s3-bucket-name -v ~/.aws:/root/.aws -p 8083:8083 -it pdf-reader-admin002
+   ```
 
-This can be achieved when:
+### Step 4: Access the Application
 
-- A bucket is created on s3 & run the following codes in your terminal
+Open your web browser and go to `http://localhost:8083` to access the application.
 
-```
-   docker build -t pdf-reader-admin002 .
-   docker run -e BUCKET_NAME=bedrock-llm-chatbot-files -v C:/Users/dumbl/.aws:/root/.aws -p 8083:8083 -it pdf-reader-admin002
-```
+## Usage
 
-## Detailed Description of Admin Section
+1. Upload a PDF file via the web interface.
+2. The application will process the PDF, create a FAISS vector store, and upload the store to your S3 bucket.
+3. Check the logs for success or error messages.
 
-The code snippet in this section is basically Streamlit application that processes PDF files and creates vector stores for document embeddings. Here's a summary:
+## Conclusion
 
-1. **Imports and Setup**:
+This application provides an end-to-end solution for processing PDF files, creating embeddings, and storing the resulting vector store in AWS S3.
 
-   - Imports necessary libraries: `boto3`, `streamlit`, `os`, `uuid`, `BedrockEmbeddings`, `RecursiveCharacterTextSplitter`, `PyPDFLoader`, `FAISS`.
-   - Initializes the S3 client and retrieves the bucket name from environment variables.
-   - Sets up the Bedrock embedding model using AWS Titan.
-
-2. **Utility Functions**:
-
-   - `get_unique_id()`: Generates a unique ID using `uuid`.
-   - `split_text(pages, chunk_size, chunk_overlap)`: Splits the text of PDF pages into chunks using the `RecursiveCharacterTextSplitter`.
-
-3. **Vector Store Creation**:
-
-   - `create_vector_store(request_id, documents)`: Creates a vector store from the document chunks using FAISS and the Bedrock embedding model. Saves the vector store locally and uploads the files to S3.
-
-4. **Main Application Logic**:
-
-   - The `main()` function sets up the Streamlit interface.
-   - Allows the user to upload a PDF file.
-   - Generates a unique request ID and saves the uploaded PDF locally.
-   - Loads and splits the PDF into pages.
-   - Splits the pages into document chunks.
-   - Creates the vector store and uploads it to S3.
-   - Displays success or error messages based on the process outcome.
-
-5. **Execution**:
-   - Runs the `main()` function if the script is executed directly.
-
-This application is designed to handle PDF uploads, split the content into manageable chunks, create embeddings for the text, store the embeddings using FAISS, and upload the resulting files to an S3 bucket.
+![PDF Processing Workflow](final-image.png)
 
 ## About Me:
 
