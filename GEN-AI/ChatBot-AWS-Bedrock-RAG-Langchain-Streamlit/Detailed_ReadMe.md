@@ -90,13 +90,3 @@ Open your web browser and go to `http://localhost:8083` to access the applicatio
 ## Conclusion
 
 This application provides an end-to-end solution for processing PDF files, creating embeddings, and storing the resulting vector store in AWS S3.
-
-## About Me:
-
-My name is Girish Jaju. I have been doing IT consulting for over 20 years. Last several years I have been working with AWS cloud architect, devops, developer (wearing many hats).
-
-For any consulting opportunities, please reach out to me at girish@jajusoft.com.
-
-## Connect with me:
-
-LinkedIn: https://www.linkedin.com/in/girishjaju/
