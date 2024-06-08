@@ -1,5 +1,7 @@
 # Detailed Description of Admin Section
 
+![Architecture](ChatBot-architecture.png)
+
 ## PDF Processing and Vector Store Creation Application
 
 This application processes a PDF file, splits its content into text chunks, creates a FAISS vector store using AWS Bedrock embeddings, and uploads the resulting vector store to AWS S3.
@@ -88,8 +90,6 @@ Open your web browser and go to `http://localhost:8083` to access the applicatio
 ## Conclusion
 
 This application provides an end-to-end solution for processing PDF files, creating embeddings, and storing the resulting vector store in AWS S3.
-
-![Architecture](ChatBot-architecture.png)
 
 ## About Me:
 
